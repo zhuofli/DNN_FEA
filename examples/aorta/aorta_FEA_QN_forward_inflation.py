@@ -16,13 +16,15 @@ from torch_fea.utils.functions import cal_attribute_on_node, cal_von_mises_stres
 from PolyhedronMesh import PolyhedronMesh
 import time
 #%% use the example data
-all_mat=torch.load('../../../pytorch_fea/data/aorta/125mat.pt', weights_only=False)['mat_str']
-matMean=torch.load('../../../pytorch_fea/data/aorta/125mat.pt', weights_only=False)['mean_mat_str']
+try:
+    all_mat=torch.load('../../../pytorch_fea/data/aorta/125mat.pt', weights_only=False)['mat_str']
+    matMean=torch.load('../../../pytorch_fea/data/aorta/125mat.pt', weights_only=False)['mean_mat_str']
+except:
+    pass
 px_pressure=16
 mat_model='GOH_Jv'
 #mat_str='1e8, 0, 1, 0, 0, 1e5'; mat_name=mat_str.split(',')[0]
-mat_str='10000, 0, 1, 0.3333, 0, 1e5'; mat_name='1e4'
-#mat_str=matMean; mat_name='matMean'
+mat_str=matMean; mat_name='matMean'
 shape_id='171' #[24,150,168,171,174,192,318]
 element_type='hex8'  #'hex8', 'tet10', 'tet4'
 mesh_p0_str='../../../pytorch_fea/data/aorta/p0_'+str(shape_id)+'_solid'
@@ -47,7 +49,7 @@ must_points=''
 #%%
 import argparse
 parser = argparse.ArgumentParser(description='Input Parameters:')
-parser.add_argument('--cuda', default=0, type=int)
+parser.add_argument('--cuda', default=2, type=int)
 parser.add_argument('--dtype', default='float64', type=str)
 parser.add_argument('--mesh_p0', default=mesh_p0_str, type=str)
 parser.add_argument('--mesh_px', default=mesh_px_str, type=str)
@@ -95,7 +97,7 @@ Node_X=Mesh_X.node.to(dtype).to(device)
 Element=Mesh_X.element.to(device)
 #%%
 boundary0=Mesh_X.node_set['boundary0']
-boundary1=Mesh_X.node_set['boundary1']
+boundary1=Mesh_X.node_set['boundary1']  
 Element_surface_pressure=Mesh_X.element_set['Element_surface_pressure']
 try:
     ElementOrientation=Mesh_X.element_data['orientation'].view(-1,3,3)

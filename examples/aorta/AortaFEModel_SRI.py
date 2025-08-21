@@ -44,6 +44,10 @@ class AortaFEModel:
         self.state['node_x']=node_x
         self.state['element']=element
         self.state['node_X']=node_X
+        if not torch.is_tensor(boundary0):
+            boundary0=torch.tensor(boundary0, dtype=torch.int64)
+        if not torch.is_tensor(boundary1):
+            boundary1=torch.tensor(boundary1, dtype=torch.int64) 
         self.state['boundary0']=boundary0
         self.state['boundary1']=boundary1
         if node_X is not None:
