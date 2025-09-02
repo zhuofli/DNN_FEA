@@ -1,12 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 21 00:38:14 2023
-
-@author: liang
-"""
-#This is equal to 3Field in theory, see test_GOH.py
+#This is equal to 3Field in theory
 import torch
-from torch import bmm, matmul, log, cos, sin, exp, pow
+from torch import matmul, log, cos, sin, exp, pow
 from torch.linalg import det
 from torch.nn.functional import relu
 import numpy as np

@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch.linalg import det
 from torch_fea.utils.functions import cal_attribute_on_node, cal_von_mises_stress
-from PolyhedronMesh import PolyhedronMesh
+from PolyhedronMeshProcessing import TetrahedronMesh, Tet10Mesh, HexahedronMesh
 import time
 #%% use the example data
 all_mat=torch.load('../../../pytorch_fea/data/aorta/125mat.pt', weights_only=False)['mat_str']
@@ -25,9 +25,9 @@ mat_model='GOH_Jv'
 #mat_str='1e8, 0, 1, 0, 0, 1e5'; mat_name=mat_str.split(',')[0]
 mat_str=matMean; mat_name='matMean'
 shape_id='171' #[24,150,168,171,174,192,318]
-element_type='hex8'  #'hex8', 'tet10', 'tet4'
+element_type_str='hex8'  #'hex8', 'tet10', 'tet4'
 mesh_px_start_str=('../../../pytorch_fea/examples/aorta/result/inflation/'
-                   +'p0_'+str(shape_id)+'_solid_'+element_type+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
+                   +'p0_'+str(shape_id)+'_solid_'+element_type_str+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
 mesh_px_end_str=mesh_px_start_str+'_GPA_prestress'
 #%%
 def get_must_points(delta):
@@ -46,8 +46,9 @@ must_points=''
 #%%
 import argparse
 parser = argparse.ArgumentParser(description='Input Parameters:')
-parser.add_argument('--cuda', default=0, type=int)
+parser.add_argument('--cuda', default=2, type=int)
 parser.add_argument('--dtype', default='float64', type=str)
+parser.add_argument('--element_type', default=element_type_str, type=str)# hex8, tet4, tet10
 parser.add_argument('--mesh_px_start', default=mesh_px_start_str, type=str)
 parser.add_argument('--mesh_px_end', default=mesh_px_end_str, type=str)
 parser.add_argument('--mat', default=mat_str, type=str)
@@ -85,6 +86,15 @@ elif arg.dtype == 'float32':
     dtype=torch.float32
 else:
     raise ValueError('unkown dtype:'+arg.dtype)
+#%%
+if 'hex8' in arg.element_type:
+    PolyhedronMesh=HexahedronMesh
+elif 'tet4' in arg.element_type:
+    PolyhedronMesh=TetrahedronMesh
+elif 'tet10' in arg.element_type:
+    PolyhedronMesh=Tet10Mesh
+else:
+    raise ValueError('unsupported element_type: '+arg.element_type)      
 #%%
 Mesh_x_start=PolyhedronMesh()
 Mesh_x_start.load_from_torch(arg.mesh_px_start+'.pt')

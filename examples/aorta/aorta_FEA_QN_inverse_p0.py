@@ -15,19 +15,19 @@ import matplotlib.pyplot as plt
 import torch
 from torch.linalg import det
 from torch_fea.utils.functions import cal_attribute_on_node, cal_von_mises_stress
-from PolyhedronMesh import PolyhedronMesh
+from PolyhedronMeshProcessing import TetrahedronMesh, Tet10Mesh, HexahedronMesh
 import time
 #%%
 px_pressure=16
 mat_model='GOH_Jv'
 mat_str='10000, 0, 1, 0.3333, 0, 1e5'; mat_name='1e4'
 shape_id='171' #[24,150,168,171,174,192,318]
-element_type='hex8'  #'hex8', 'tet10', 'tet4'
+element_type_str='hex8'  #'hex8', 'tet10', 'tet4'
 mesh_p0_str='../../../pytorch_fea/data/aorta/p0_'+str(shape_id)+'_solid'
-if element_type != 'hex8':
-    mesh_p0_str=mesh_p0_str+'_'+element_type
+if element_type_str != 'hex8':
+    mesh_p0_str=mesh_p0_str+'_'+element_type_str
 mesh_px_str=('../../../pytorch_fea/examples/aorta/result/inflation/'
-             +'p0_'+str(shape_id)+'_solid_'+element_type+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
+             +'p0_'+str(shape_id)+'_solid_'+element_type_str+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
 mesh_inverse_p0_str=mesh_px_str+'_QN_inverse_p0'
 mesh_inverse_p0_str=mesh_inverse_p0_str.replace('inflation', 'inverse_p0')
 #%%
@@ -48,8 +48,9 @@ must_points=''
 #%%
 import argparse
 parser = argparse.ArgumentParser(description='Input Parameters:')
-parser.add_argument('--cuda', default=0, type=int)
+parser.add_argument('--cuda', default=2, type=int)
 parser.add_argument('--dtype', default='float64', type=str)
+parser.add_argument('--element_type', default=element_type_str, type=str)# hex8, tet4, tet10
 parser.add_argument('--mesh_px', default=mesh_px_str, type=str)
 parser.add_argument('--mesh_p0', default=mesh_inverse_p0_str, type=str)
 parser.add_argument('--mesh_p0_init', default='', type=str)
@@ -92,6 +93,15 @@ elif arg.dtype == 'float32':
     dtype=torch.float32
 else:
     raise ValueError('unkown dtype:'+arg.dtype)
+#%%
+if 'hex8' in arg.element_type:
+    PolyhedronMesh=HexahedronMesh
+elif 'tet4' in arg.element_type:
+    PolyhedronMesh=TetrahedronMesh
+elif 'tet10' in arg.element_type:
+    PolyhedronMesh=Tet10Mesh
+else:
+    raise ValueError('unsupported element_type: '+arg.element_type)     
 #%%
 Mesh_x=PolyhedronMesh()
 Mesh_x.load_from_torch(arg.mesh_px+'.pt')

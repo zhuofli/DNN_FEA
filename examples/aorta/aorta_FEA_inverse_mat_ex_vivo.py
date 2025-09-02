@@ -1,4 +1,7 @@
 #based on aorta_FEA_C3D8_SRI_inverse_mat_ex_vivo.py
+#%%
+import os
+os.environ['CUDA_DEVICE_ORDER']='PCI_BUS_ID'
 import sys
 sys.path.append("../../../pytorch_fea")
 sys.path.append("../../../pytorch_fea/examples/aorta")
@@ -8,7 +11,7 @@ from IPython import display
 import matplotlib.pyplot as plt
 import torch
 from torch_fea.optimizer.FE_lbfgs_ori import LBFGS
-from PolyhedronMesh import PolyhedronMesh
+from PolyhedronMeshProcessing import TetrahedronMesh, Tet10Mesh, HexahedronMesh
 import time
 #%%
 #attention:
@@ -18,24 +21,27 @@ all_mat=torch.load('../../../pytorch_fea/data/aorta/125mat.pt')['mat_str']
 matMean=torch.load('../../../pytorch_fea/data/aorta/125mat.pt')['mean_mat_str']
 mat_true=matMean
 mat_name='matMean'
-px_pressure=20
+px_pressure=16
 mat_model='GOH_Jv'
 shape_id='171' #[24,150,168,171,174,192,318]
-element_type='tet10'
-mesh_p0_str='../../../pytorch_fea/data/aorta/p0_'+str(shape_id)+'_solid_'+element_type
+element_type_str='hex8'
+mesh_p0_str='../../../pytorch_fea/data/aorta/p0_'+str(shape_id)+'_solid'
+if element_type_str != 'hex8':
+    mesh_p0_str=mesh_p0_str+'_'+element_type_str
 mesh_px_str=('../../../pytorch_fea/examples/aorta/result/inflation/'
-             +'p0_'+str(shape_id)+'_solid_'+element_type+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
+             +'p0_'+str(shape_id)+'_solid_'+element_type_str+'_'+mat_model+'_'+mat_name+'_p'+str(px_pressure))
 folder_result='../../../pytorch_fea/examples/aorta/result/inverse_mat_ex_vivo'
 #%%
 import argparse
 parser = argparse.ArgumentParser(description='Input Parameters:')
-parser.add_argument('--cuda', default=0, type=int)
+parser.add_argument('--cuda', default=2, type=int)
 parser.add_argument('--dtype', default="float64", type=str)
 parser.add_argument('--folder_result', default=folder_result, type=str)
 parser.add_argument('--mat_model', default=mat_model, type=str)
 parser.add_argument('--mat_true', default=mat_true, type=str)#
 parser.add_argument('--mesh_p0', default=mesh_p0_str, type=str)
 parser.add_argument('--mesh_px', default=mesh_px_str, type=str)
+parser.add_argument('--element_type', default=element_type_str, type=str)# hex8, tet4, tet10
 parser.add_argument('--pressure', default=px_pressure, type=float)
 parser.add_argument('--lr', default=0.1, type=float)
 parser.add_argument('--max_iter', default=500, type=int)
@@ -52,6 +58,15 @@ elif arg.dtype == "float32":
     dtype=torch.float32
 else:
     raise ValueError("unkown dtype:"+arg.dtype)
+#%%
+if 'hex8' in arg.element_type:
+    PolyhedronMesh=HexahedronMesh
+elif 'tet4' in arg.element_type:
+    PolyhedronMesh=TetrahedronMesh
+elif 'tet10' in arg.element_type:
+    PolyhedronMesh=Tet10Mesh
+else:
+    raise ValueError('unsupported element_type: '+arg.element_type)      
 #%%
 Mesh_X=PolyhedronMesh()
 Mesh_X.load_from_torch(arg.mesh_p0+".pt")
