@@ -58,3 +58,6 @@ Thumbs.db
 # folders
 data/
 result/
+
+#lock file for ppt
+*.~lock*
