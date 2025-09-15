@@ -23,9 +23,4 @@ inverse analysis:
 > (3) aorta_FEA_QN_GPA_prestress.py to obtain stress and strain of pressurized geometry given material parameters. \
 > note: residual stress/strain is not considered
 
-stress analysis by static determinacy:
-> use a stiff material (e.g., --mat "50000, 0, 1, 0.3333, 0, 1e5"' ' --mat_model GOH_Jv') \
-> run aorta_FEA_QN_inverse_p0.py \
-> the stress is stored on the mesh file of the unpressurized geometry.
-
 Dependency: PyTorch, PyTorch Geometric, and PyPardiso
