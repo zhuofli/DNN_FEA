@@ -1,65 +1,58 @@
-# DNN-FEA: PyTorch-based Finite Element Analysis for Cardiac Mechanics
+# DNN-FEA (LV): Differentiable Finite Element Analysis with Neural Networks
 
-This repository contains a **refactored and extended PyTorch-based Finite Element Analysis (FEA) framework**
-adapted for **deep learning–assisted biomechanical modeling**, with a primary focus on **left ventricle (LV) mechanics**.
+This repository is a research/education codebase for our manuscript:
 
-The codebase is built upon the PyTorch-FEA framework introduced in:
+**"An Integrated DNN-FEA Approach for Inverse Identification of Passive, Heterogeneous Material Parameters of Left Ventricular Myocardium".**
 
-> **PyTorch-FEA: Autograd-enabled Finite Element Analysis Methods with Applications for Biomechanical Analysis of Human Aorta**  
-> *Computer Methods and Programs in Biomedicine*, 2023  
-> DOI: https://doi.org/10.1016/j.cmpb.2023.107616
+It is forked from the PyTorch-FEA project by Liang et al. and extended/refactored for **left ventricle (LV)** applications, including:
+- LV forward inflation with differentiable FEA
+- inverse identification of heterogeneous material parameters (DNN-FEA)
+- rule-based fiber/material orientation utilities
+- HO-style constitutive modeling components used in our LV pipeline
 
-The original implementation associated with the paper is available at:  
-https://github.com/liangbright/pytorch_fea_paper
+## Upstream Reference (Original PyTorch-FEA)
+- Upstream repo: https://github.com/liangbright/pytorch_fea
+- Paper (aorta application): https://doi.org/10.1016/j.cmpb.2023.107616
+- Preprint: https://www.biorxiv.org/content/10.1101/2023.03.27.533816v1
 
-This repository **is not a mirror of the original paper code**.  
-Instead, it provides a **cleaned, modularized, and application-oriented extension** designed for:
-- left ventricle (LV) finite element modeling,
-- constitutive parameter learning using neural networks,
-- inverse and forward biomechanical analysis with differentiable FEA.
+> Note: The upstream paper demonstrates aorta examples.  
+> This repository focuses on **LV** and reorganizes scripts accordingly.
 
----
+## Repository Structure (high level)
+- `torch_fea/` : differentiable FEA core (upstream-based)
+- `LVFEModel.py` : LV model wrapper used by LV scripts
+- `LV_FEA_QN_forward_inflation.py` : LV forward inflation example
+- `LV_FEA_inverse_mat_ex_vivo_NN.py` : LV inverse material identification (DNN-FEA)
+- `RBori.py`, `LV_element_orientation.py` : rule-based orientation utilities
+- `doc/` : documentation (data format, reproduction notes)
+- `examples/` : runnable minimal demos (being cleaned to match LV)
 
-## Key Differences from the Original PyTorch-FEA Paper Code
+## Quickstart (LV)
+### 1) Install dependencies
+- PyTorch
+- PyTorch Geometric
+- PyPardiso
+- mesh library (required): https://github.com/liangbright/mesh
 
-Compared with the original aorta-focused implementation, this repository includes:
+### 2) Run LV forward example
+```bash
+python LV_FEA_QN_forward_inflation.py
 
-- Refactored project structure with clearer separation between:
-  - FEA core modules,
-  - constitutive models,
-  - data handling,
-  - experiment scripts.
-- Adaptation to **left ventricle geometry and loading conditions**.
-- Simplified and cleaned example scripts to support **reproducible forward and inverse analyses**.
-- Removal of hard-coded paths and environment-specific dependencies.
-- Improved documentation and inline comments for readability and reuse.
+### 3) Run LV inverse example
+```bash
+python LV_FEA_inverse_mat_ex_vivo_NN.py
 
----
+## Data
 
-## Repository Structure
+Due to size and potential privacy restrictions, full datasets are not hosted in this repository.
+Please see doc/data_format.md for the expected input data structure and minimal example guidance.
 
-```text
-.
-├── torch_fea/                # Core FEA and learning modules
-│   ├── element/            # Finite element formulation and solvers, support tri3, tri6, hex8, tet10, tet4, wedge6 and quad4
-│   ├── material/           # Constitutive model
-│   ├── models/             # FE model achievement
-│   ├── optimizer/          # LBFGS optimizer in forward and inverse process
-│   └── utils/              # Reproducibility utilities
-│
-├── examples/
-│   └── lv/                 # Minimal LV forward and inverse examples
-│
-├── doc/                    # Methodology and data-format documentation
-├── Requirements
-└── README.md
-```
----
+## Reproducibility
 
-## Minimal Reproducible Example
+No absolute paths should be required.
 
-Forward Analysis
+All scripts should be runnable by configuring data paths (see doc/data_format.md).
 
-Compute the pressurized LV configuration given material parameters and an unloaded geometry:
-main code: LV_FEA_QN_forward_inflation.py
-input:
+## License / Acknowledgement
+
+This repository follows the upstream licensing terms. Please cite the upstream PyTorch-FEA paper if you use the FEA core.
