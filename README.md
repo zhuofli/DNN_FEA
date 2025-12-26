@@ -1,26 +1,56 @@
-# PyTorch FEA
+# DNN-FEA: PyTorch-based Finite Element Analysis for Cardiac Mechanics
 
-The repo has the refactored code of our paper published at Computer Methods and Programs in Biomedicine, titled "**PyTorch-FEA: Autograd-enabled Finite Element Analysis Methods with Applications for Biomechanical Analysis of Human Aorta**" at https://doi.org/10.1016/j.cmpb.2023.107616
+This repository contains a **refactored and extended PyTorch-based Finite Element Analysis (FEA) framework**
+adapted for **deep learning–assisted biomechanical modeling**, with a primary focus on **left ventricle (LV) mechanics**.
 
-I am working to make it useful for more applications.
+The codebase is built upon the PyTorch-FEA framework introduced in:
 
-The orignal code of the paper is available at https://github.com/liangbright/pytorch_fea_paper
+> **PyTorch-FEA: Autograd-enabled Finite Element Analysis Methods with Applications for Biomechanical Analysis of Human Aorta**  
+> *Computer Methods and Programs in Biomedicine*, 2023  
+> DOI: https://doi.org/10.1016/j.cmpb.2023.107616
 
-The preprint of our paper is available at https://www.biorxiv.org/content/10.1101/2023.03.27.533816v1
+The original implementation associated with the paper is available at:  
+https://github.com/liangbright/pytorch_fea_paper
 
-PyTorch-FEA needs the mesh library at https://github.com/liangbright/mesh
+This repository **is not a mirror of the original paper code**.  
+Instead, it provides a **cleaned, modularized, and application-oriented extension** designed for:
+- left ventricle (LV) finite element modeling,
+- constitutive parameter learning using neural networks,
+- inverse and forward biomechanical analysis with differentiable FEA.
 
-Example data: https://drive.google.com/file/d/1ByOjc9RVFEexLXB-u6Qd1SMAS-BKvW3g/view?usp=sharing
+---
 
-Try those examples:
+## Key Differences from the Original PyTorch-FEA Paper Code
 
-forward analysis:
-   > aorta_FEA_QN_forward_inflation.py to obtain pressurized geometry given material parameters and unpressurized geometry. 
+Compared with the original aorta-focused implementation, this repository includes:
 
-inverse analysis:
-> (1) aorta_FEA_inverse_mat_ex_vivo.py to obtain material parameters given pressurized and unpressurized geometries. \
-> (2) aorta_FEA_QN_inverse_p0.py to obtain unpressurized geometry given material parameters and pressurized geometry. \
-> (3) aorta_FEA_QN_GPA_prestress.py to obtain stress and strain of pressurized geometry given material parameters. \
-> note: residual stress/strain is not considered
+- Refactored project structure with clearer separation between:
+  - FEA core modules,
+  - constitutive models,
+  - data handling,
+  - experiment scripts.
+- Adaptation to **left ventricle geometry and loading conditions**.
+- Simplified and cleaned example scripts to support **reproducible forward and inverse analyses**.
+- Removal of hard-coded paths and environment-specific dependencies.
+- Improved documentation and inline comments for readability and reuse.
 
-Dependency: PyTorch, PyTorch Geometric, and PyPardiso
+---
+
+## Repository Structure
+
+```text
+.
+├── dnn_fea/                # Core FEA and learning modules
+│   ├── fea/                # Finite element formulation and solvers
+│   ├── models/             # Constitutive models and neural networks
+│   ├── orientation/        # Fiber / material orientation models
+│   └── utils/              # IO, logging, reproducibility utilities
+│
+├── examples/
+│   └── lv/                 # Minimal LV forward and inverse examples
+│
+├── scripts/                # Executable training / inference entry points
+├── data/                   # Example or toy data (ignored by default)
+├── doc/                    # Methodology and data-format documentation
+├── requirements.txt
+└── README.md
