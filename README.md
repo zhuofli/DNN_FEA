@@ -1,4 +1,4 @@
-# DNN-FEA (LV): Differentiable Finite Element Analysis with Neural Networks
+# DNN-FEA (LV): Finite Element Analysis with Deep Neural Networks
 
 This repository is a research/education codebase for our manuscript:
 
