@@ -20,6 +20,7 @@ It is forked from the PyTorch-FEA project by Liang et al. and extended/refactore
 
 ## Repository Structure (high level)
 - `torch_fea/` : differentiable FEA core (upstream-based)
+- 'mesh/': codes reqired to process meshes
 - `LVFEModel.py` : LV model wrapper used by LV scripts
 - `LV_FEA_QN_forward_inflation.py` : LV forward inflation example
 - `LV_FEA_inverse_mat_ex_vivo_NN.py` : LV inverse material identification (DNN-FEA)
