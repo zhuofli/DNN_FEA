@@ -37,11 +37,11 @@ It is forked from the PyTorch-FEA project by Liang et al. and extended/refactore
 ### 2) Run LV forward example
 ```bash
 python LV_FEA_QN_forward_inflation.py
-
+```
 ### 3) Run LV inverse example
 ```bash
 python LV_FEA_inverse_mat_ex_vivo_NN.py
-
+```
 ## Data
 
 Due to size and potential privacy restrictions, full datasets are not hosted in this repository.
