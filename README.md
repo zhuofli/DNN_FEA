@@ -40,17 +40,26 @@ Compared with the original aorta-focused implementation, this repository include
 
 ```text
 .
-├── dnn_fea/                # Core FEA and learning modules
-│   ├── fea/                # Finite element formulation and solvers
-│   ├── models/             # Constitutive models and neural networks
-│   ├── orientation/        # Fiber / material orientation models
-│   └── utils/              # IO, logging, reproducibility utilities
+├── torch_fea/                # Core FEA and learning modules
+│   ├── element/            # Finite element formulation and solvers, support tri3, tri6, hex8, tet10, tet4, wedge6 and quad4
+│   ├── material/           # Constitutive model
+│   ├── models/             # FE model achievement
+│   ├── optimizer/          # LBFGS optimizer in forward and inverse process
+│   └── utils/              # Reproducibility utilities
 │
 ├── examples/
 │   └── lv/                 # Minimal LV forward and inverse examples
 │
-├── scripts/                # Executable training / inference entry points
-├── data/                   # Example or toy data (ignored by default)
 ├── doc/                    # Methodology and data-format documentation
-├── requirements.txt
+├── Requirements
 └── README.md
+```
+---
+
+## Minimal Reproducible Example
+
+Forward Analysis
+
+Compute the pressurized LV configuration given material parameters and an unloaded geometry:
+main code: LV_FEA_QN_forward_inflation.py
+input:
