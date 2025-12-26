@@ -1,0 +1,12 @@
+Dependencies
+
+Python ≥ 3.9
+
+PyTorch
+
+PyTorch Geometric
+
+PyPardiso
+
+This project also depends on the mesh processing library developed by the original authors:
+https://github.com/liangbright/mesh
