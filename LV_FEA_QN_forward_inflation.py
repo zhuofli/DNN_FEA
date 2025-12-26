@@ -6,30 +6,42 @@ Created on Wed Feb 21 22:12:44 2024
 """
 #%%
 import os
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-import sys
-sys.path.append("***/DNN_FEA")#append the codes in main
-sys.path.append("***/DNN_FEA/mesh")
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+
+from pathlib import Path
 import numpy as np
-from IPython import display
 import matplotlib.pyplot as plt
 import torch
 from torch.linalg import det
-from torch_fea.utils.functions import (cal_attribute_on_node, cal_von_mises_stress, 
-                                       cal_max_abs_principal_stress, cal_max_abs_principal_strain)
+
+# ------------------------------------------------------------------
+# Project paths (portable, reproducible)
+# ------------------------------------------------------------------
+THIS_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = THIS_DIR.parent
+
+mesh_p0_dir = PROJECT_ROOT / "examples" / "p54_c3d4_ori"
+
+# ------------------------------------------------------------------
+# Imports from project
+# ------------------------------------------------------------------
+from torch_fea.utils.functions import (
+    cal_attribute_on_node,
+    cal_von_mises_stress,
+    cal_max_abs_principal_stress,
+    cal_max_abs_principal_strain,
+)
+
 from PolyhedronMeshProcessing import PolyhedronMesh
-import time
 from LV_mat_distribution import generate_mat_distribution
-#%%
-#all_mat=torch.load('E:/Research/NNFEA/data/125mat.pt')['mat_str']
-#matMean=torch.load('E:/Research/NNFEA/data/125mat.pt')['mean_mat_str']
-px_pressure=4
-mat_model='HO'
-#mat_str="1e3, 0, 1, 0, 0, 1e5"; mat_name='1e3'
-#mat_str="1e2, 0, 1, 0, 0, 1e5"; mat_name='1e2'
-#mat_str=matMean; mat_name='matMean'
-mat_str='generate_mat_distribution(4, arg.mesh_p0)'; mat_name='distribution4_0fixed_controls'
-mesh_p0_str='***/DNN_FEA/examples/p54_c3d4_ori'
+
+# ------------------------------------------------------------------
+# Parameters
+# ------------------------------------------------------------------
+px_pressure = 4
+mat_model = "HO"
+mat_str='generate_mat_distribution(4, arg.mesh_p0)'; mat_name='distribution4'
+mesh_p0_str=PROJECT_ROOT / "examples" / "p54_c3d4_ori"
 mesh_px_str=mesh_p0_str+'_inflate_'+mat_model+'('+str(mat_name)+')_p'+str(px_pressure)
 #%%
 def get_must_points(delta):
@@ -536,3 +548,4 @@ while iter1 <= max_iter1:
         break
 #%% save the final result
 save(True)
+
