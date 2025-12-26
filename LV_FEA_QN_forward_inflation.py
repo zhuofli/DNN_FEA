@@ -8,8 +8,8 @@ Created on Wed Feb 21 22:12:44 2024
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 import sys
-sys.path.append("C:/Users/zhuofli/OneDrive - Texas Tech University/Data_Zhuofan/NNFEA/code_original/code")
-sys.path.append("C:/Users/zhuofli/OneDrive - Texas Tech University/Data_Zhuofan/NNFEA/code_original/code/mesh")
+sys.path.append("***/DNN_FEA")#append the codes in main
+sys.path.append("***/DNN_FEA/mesh")
 import numpy as np
 from IPython import display
 import matplotlib.pyplot as plt
@@ -29,9 +29,8 @@ mat_model='HO'
 #mat_str="1e2, 0, 1, 0, 0, 1e5"; mat_name='1e2'
 #mat_str=matMean; mat_name='matMean'
 mat_str='generate_mat_distribution(4, arg.mesh_p0)'; mat_name='distribution4_0fixed_controls'
-mesh_p0_str='C:/Users/zhuofli/OneDrive - Texas Tech University/Data_Zhuofan/NNFEA/data_1119/x2_c3d10_ori'
-#mesh_p0_str='D:/MLFEA/minliang_lv/data/ssm/p0_171_solid_tet10'
-mesh_px_str=mesh_p0_str+'_inflate_'+mat_model+'('+str(mat_name)+')_p'+str(px_pressure)+'RBori'
+mesh_p0_str='***/DNN_FEA/examples/p54_c3d4_ori'
+mesh_px_str=mesh_p0_str+'_inflate_'+mat_model+'('+str(mat_name)+')_p'+str(px_pressure)
 #%%
 def get_must_points(delta):
     t=0
@@ -102,8 +101,10 @@ Boundary=Mesh_X.mesh_data['Boundary']
 Boundary=torch.tensor(Boundary, dtype=torch.int64)
 Element_surface_pressure=Mesh_X.mesh_data['Element_surface_pressure']
 Element_surface_pressure=torch.tensor(Element_surface_pressure, dtype=torch.int64)
-ori=np.loadtxt('C:/Users/zhuofli/OneDrive - Texas Tech University/Data_Zhuofan/NNFEA/data_1119/x2_c3d10_rbori.txt')
-Mesh_X.element_data['orientation'] = torch.tensor(ori, dtype=torch.float64)
+#%%
+#if you are using orientation in .inp file, comment out the following 2 lines of codes
+#ori=np.loadtxt('***/p54_c3d4_rbori.txt')
+#Mesh_X.element_data['orientation'] = torch.tensor(ori, dtype=torch.float64)
 try:
     ElementOrientation=Mesh_X.element_data['orientation'].view(-1,3,3)
 except:    
@@ -535,33 +536,3 @@ while iter1 <= max_iter1:
         break
 #%% save the final result
 save(True)
-#%%
-def loss_function(Node_X, Node_x, Node_x_RB):
-    Res1=Node_X-Node_x
-    Res2=Node_X-Node_x_RB
-    strain_1=(Res1**2).sum(dim=1)
-    strain_2=(Res2**2).sum(dim=1)
-    strain_1=strain_1**(0.5)
-    strain_2=strain_2**(0.5)
-    #print(torch.isnan(strain_1).any())
-    #print(torch.isnan(strain_2).any())
-    delta_strain=abs((strain_2-strain_1)/(strain_1+1e-5))
-    #print(torch.isnan(delta_strain).any())
-    return strain_1, strain_2, delta_strain
-
-Mesh_x=PolyhedronMesh()
-Mesh_x.load_from_torch("C:/Users/zhuofli/OneDrive - Texas Tech University/Data_Zhuofan/NNFEA/data/data/Zhuofan result/x2_c3d10_ori_inflate_HO(distribution4_0fixed_controls)_p4.pt")
-Node_x=Mesh_x.node.to(dtype).to(device)
-Mesh_x_RB=PolyhedronMesh()
-Mesh_x_RB.load_from_torch(arg.mesh_px+".pt")
-Node_x_RB=Mesh_x_RB.node.to(dtype).to(device)
-strain_1, strain_2,strain_noise=loss_function(Node_X,Node_x, Node_x_RB)
-print('strain_noise_max=',float(max(strain_noise)),
-      'strain_noise_min=',float(min(strain_noise)),
-      'strain_noise_mean=', float(strain_noise.mean()))
-print('strain_groundtruth_max=',float(max(strain_1)),
-      'strain_groundtruth_min=',float(min(strain_1)),
-      'strain_groundtruth_mean=', float(strain_1.mean()))
-print('strain_new_max=',float(max(strain_2)),
-      'strain_new_min=',float(min(strain_2)),
-      'strain_new_mean=', float(strain_2.mean()))
