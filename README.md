@@ -18,12 +18,12 @@ It is forked from the PyTorch-FEA project by Liang et al. and extended/refactore
 > Note: The upstream paper demonstrates aorta examples.  
 > This repository focuses on **LV** and reorganizes scripts accordingly.
 
-## Repository Structure (high level)
+## Repository Structure 
 - `torch_fea/` : differentiable FEA core (upstream-based)
-- 'mesh/': codes reqired to process meshes
+- 'mesh/': codes required to process meshes
 - `LVFEModel.py` : LV model wrapper used by LV scripts
-- `LV_FEA_QN_forward_inflation.py` : LV forward inflation example
-- `LV_FEA_inverse_mat_ex_vivo_NN.py` : LV inverse material identification (DNN-FEA)
+- `LV_FEA_QN_forward_inflation.py` : LV forward inflation code
+- `LV_FEA_inverse_mat_ex_vivo_NN.py` : LV inverse material identification code
 - `RBori.py`, `LV_element_orientation.py` : rule-based orientation utilities
 - `doc/` : documentation (data format, reproduction notes)
 - `examples/` : runnable minimal demos (being cleaned to match LV)
@@ -33,8 +33,6 @@ It is forked from the PyTorch-FEA project by Liang et al. and extended/refactore
 - PyTorch
 - PyTorch Geometric
 - PyPardiso
-- mesh library (required): https://github.com/liangbright/mesh
-
 ### 2) Run LV forward example
 ```bash
 python LV_FEA_QN_forward_inflation.py
@@ -45,14 +43,13 @@ python LV_FEA_inverse_mat_ex_vivo_NN.py
 ```
 ## Data
 
-Due to size and potential privacy restrictions, full datasets are not hosted in this repository.
-Please see doc/data_format.md for the expected input data structure and minimal example guidance.
+Please see examples/lv/README.md for the expected input data format and minimal example guidance.
 
 ## Reproducibility
 
 No absolute paths should be required.
 
-All scripts should be runnable by configuring data paths (see doc/data_format.md).
+All scripts should be runnable by configuring data paths (see examples/lv/README.md).
 
 ## License / Acknowledgement
 
