@@ -30,14 +30,19 @@ It is forked from the PyTorch-FEA project by Liang et al. and extended/refactore
 
 ## Quickstart (LV)
 ### 1) Install dependencies
-- PyTorch
-- PyTorch Geometric
-- PyPardiso
+Please see main/Requirements.txt
+
 ### 2) Run LV forward example
+Input: undeformed geometry .inp .vtk and .pt files, material parameters
+You can adjust the material parameters for inflation process by editing distribution in main/LV_mat_distribution.py
+Output: deformed geometry .pt and .vtk files
 ```bash
 python LV_FEA_QN_forward_inflation.py
 ```
+
 ### 3) Run LV inverse example
+Input: deformed and undeformed geometry .pt and .vtk files
+Output: material parameters saved in .vtk file. You may check the material parameter value and distribution via Paraview.
 ```bash
 python LV_FEA_inverse_mat_ex_vivo_NN.py
 ```
@@ -51,6 +56,17 @@ No absolute paths should be required.
 
 All scripts should be runnable by configuring data paths (see examples/lv/README.md).
 
-## License / Acknowledgement
+## 📄 License and Citations
 
-This repository follows the upstream licensing terms. Please cite the upstream PyTorch-FEA paper if you use the FEA core.
+This repository follows the MIT License, as per the upstream [PyTorch-FEA](https://github.com/liangbright/pytorch_fea) project.
+
+Please retain all original LICENSE terms.
+
+If you use this code, please **cite both** our paper and the upstream PyTorch-FEA paper:
+
+### 📚 Our Paper
+> DOI remains to be added
+
+### 📚 PyTorch-FEA
+> Liang, Liang, et al. "PyTorch-FEA: Autograd-enabled finite element analysis methods with applications for biomechanical analysis of human aorta." Computer methods and programs in biomedicine 238 (2023): 107616. 
+> https://doi.org/10.1016/j.cmpb.2023.107616

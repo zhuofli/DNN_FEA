@@ -1,0 +1,26 @@
+# ===== Base Python environment =====
+python==3.12
+
+# ===== PyTorch + CUDA 12.4 (only works with pip + special index) =====
+torch==2.5.1+cu124
+torchvision==0.20.1+cu124
+torchaudio==2.5.1+cu124
+
+# ===== PyTorch Geometric  =====
+torch_geometric
+pyg-lib
+torch-scatter
+torch-cluster
+torch-sparse
+torch-spline-conv
+
+# ===== Core scientific computing =====
+matplotlib
+pandas
+scikit-learn
+scikit-image
+vtk==9.4.1
+spyder
+
+# ===== Sparse solver =====
+pypardiso
