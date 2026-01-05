@@ -13,35 +13,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 import torch
 from torch.linalg import det
-
-# ------------------------------------------------------------------
-# Project paths (portable, reproducible)
-# ------------------------------------------------------------------
-THIS_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = THIS_DIR.parent
-
-mesh_p0_dir = PROJECT_ROOT / "examples" / "p54_c3d4_ori"
-
-# ------------------------------------------------------------------
-# Imports from project
-# ------------------------------------------------------------------
-from torch_fea.utils.functions import (
-    cal_attribute_on_node,
-    cal_von_mises_stress,
-    cal_max_abs_principal_stress,
-    cal_max_abs_principal_strain,
-)
-
 from PolyhedronMeshProcessing import PolyhedronMesh
 from LV_mat_distribution import generate_mat_distribution
 
 # ------------------------------------------------------------------
 # Parameters
 # ------------------------------------------------------------------
-px_pressure = 4
+px_pressure = 20
 mat_model = "HO"
 mat_str='generate_mat_distribution(4, arg.mesh_p0)'; mat_name='distribution4'
-mesh_p0_str=PROJECT_ROOT / "examples" / "p54_c3d4_ori"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '..'))
+mesh_p0_str = os.path.join(project_root, 'examples', 'lv', 'P54_c3d4_ori')
+
 mesh_px_str=mesh_p0_str+'_inflate_'+mat_model+'('+str(mat_name)+')_p'+str(px_pressure)
 #%%
 def get_must_points(delta):

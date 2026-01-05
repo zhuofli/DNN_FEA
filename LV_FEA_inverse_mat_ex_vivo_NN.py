@@ -7,10 +7,12 @@ Created on Thu Feb 22 10:22:07 2024
 
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(current_dir, '..'))
 import sys
-sys.path.append("E:/Research/NNFEA/code")
-sys.path.append("E:/Research/NNFEA/code/pytorch_fea")
-sys.path.append("E:/Research/NNFEA/code/mesh")
+sys.path.append(project_root)
+sys.path.append(os.path.join(project_root, 'pytorch_fea')
+sys.path.append(os.path.join(project_root, 'mesh')
 import numpy as np
 from IPython import display
 import matplotlib.pyplot as plt
@@ -28,17 +30,16 @@ from LV_mat_distribution import generate_mat_distribution
 #    mat_model for inverse_mat should be the same as the mat_model for inflation
 #    this file works for heterogeneous/nonuniform mat distribution
 #
-all_mat=torch.load('E:/Research/NNFEA/data/125mat.pt')['mat_str']
-matMean=torch.load('E:/Research/NNFEA/data/125mat.pt')['mean_mat_str']
+#all_mat=torch.load('E:/Research/NNFEA/data/125mat.pt')['mat_str']
+#matMean=torch.load('E:/Research/NNFEA/data/125mat.pt')['mean_mat_str']
 px_pressure=20
 mat_model='GOH_Jv'
 #mat_true="1e2, 0, 1, 0, 0, 1e5"; mat_name='1e2'
 #mat_true=matMean; mat_name='matMean'
 mat_true='generate_mat_distribution(3,arg.mesh_p0)'; mat_name='distribution3'
-mesh_p0_str='E:/Research/NNFEA/data/ori/p54_c3d4_ori'
-#mesh_p0_str='D:/MLFEA/minliang_lv/data/new_0220/P54_phase1_lv_c3d10test'
+mesh_p0_str = os.path.join(project_root, 'examples', 'lv', 'P54_c3d4_ori')
 mesh_px_str=mesh_p0_str+'_inflate_'+mat_model+'('+str(mat_name)+')_p'+str(px_pressure)
-folder_result='E:/Research/NNFEA/data/ori/inverse_mat_ex_vivo_NN'
+folder_result=os.path.join(project_root, 'examples', 'lv','inverse_mat_ex_vivo_NN')
 #%%
 import argparse
 parser = argparse.ArgumentParser(description='Input Parameters:')
